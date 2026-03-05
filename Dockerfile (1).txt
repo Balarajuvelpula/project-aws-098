@@ -1,5 +1,11 @@
-FROM openjdk:8-alpine
-COPY HelloWorld.java HelloWorld.java
-RUN javac HelloWorld.java
-CMD java HelloWorld
- 
+FROM python:3.10
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install -r requirements.txt
+
+EXPOSE 5000
+
+CMD ["python", "app.py"]
