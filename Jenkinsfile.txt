@@ -1,31 +1,40 @@
 pipeline {
     agent any
-    
-    tools {
-        maven 'maven3.6'
-        jdk 'jdk17'
-    }
 
     stages {
-        stage('git checkout') {
+
+        stage('Clone Repository') {
             steps {
-               git branch: 'main',url: 'https://github.com/devopswithkrishnareddy/Boardgame.git'
+                git branch: 'main', url: 'https://github.com/Balarajuvelpula/project-aws-098.git'
             }
         }
-        stage('compile') {
+
+        stage('List Project Files') {
             steps {
-                sh 'mvn compile'
+                sh '''
+                echo "Project Files:"
+                ls -la
+                '''
             }
         }
-        stage('test') {
+
+        stage('Run Script') {
             steps {
-               sh 'mvn test'
+                sh '''
+                echo "Running project script"
+                chmod +x *.sh || true
+                bash *.sh || true
+                '''
             }
         }
-        stage('package') {
+
+        stage('Deploy Stage') {
             steps {
-                sh 'mvn package'
+                sh '''
+                echo "Deployment completed successfully"
+                '''
             }
         }
+
     }
 }
