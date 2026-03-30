@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION = "ap-south-1"
-        ECR_REGISTRY = "546288497088.dkr.ecr.ap-south-1.amazonaws.com"
+        ECR_REGISTRY = "546288497088.dkr.ecr.ap-south-1.amazonaws.com/python-ecr"
         ECR_REPO = "python-ecr"
         IMAGE_TAG = "${BUILD_NUMBER}"
     }
