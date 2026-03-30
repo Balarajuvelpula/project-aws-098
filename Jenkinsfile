@@ -3,16 +3,16 @@ pipeline {
 
     stages {
 
-        stage('Clone Repo') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Balarajuvelpula/project-aws-098.git'
-            }
-        }
-
-        stage('Install Dependencies') {
+        stage('Setup Python Environment') {
             steps {
                 sh '''
-                pip3 install flask requests
+                sudo apt update
+                sudo apt install python3 python3-venv python3-pip -y
+
+                python3 -m venv venv
+                . venv/bin/activate
+
+                pip install flask requests
                 '''
             }
         }
@@ -20,10 +20,10 @@ pipeline {
         stage('Run Application') {
             steps {
                 sh '''
-                python3 main.py
+                . venv/bin/activate
+                python app.py
                 '''
             }
         }
-
     }
 }
