@@ -12,21 +12,7 @@ pipeline {
 
         stage('Clone Repository') {
             steps {
-                git branch: 'main',
-                url: 'https://github.com/Balarajuvelpula/project-aws-098.git'
-            }
-        }
-
-        stage('Login to ECR') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'aws-creds']]) {
-
-                    sh '''
-                    aws ecr get-login-password --region $AWS_REGION | \
-                    docker login --username AWS --password-stdin $ECR_REGISTRY
-                    '''
-                }
+                git branch: 'main', url: 'https://github.com/Balarajuvelpula/project-aws-098.git'
             }
         }
 
