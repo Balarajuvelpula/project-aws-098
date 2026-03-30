@@ -1,27 +1,32 @@
 pipeline {
     agent any
 
+    environment {
+        ACR_NAME = "546288497088.dkr.ecr.ap-south-1.amazonaws.com/python-ecr"                // ex: baluacr
+        IMAGE_NAME = "project-aws-098"
+        TAG = "latest"
+    }
+
     stages {
 
-        stage('Setup Python Environment') {
+        stage('Clone Code') {
+            steps {
+                git branch: 'main', url: 'https://github.com/Balarajuvelpula/project-aws-098.git'
+            }
+        }
+
+        stage('Build Docker Image') {
             steps {
                 sh '''
-                sudo apt update
-                sudo apt install python3 python3-venv python3-pip -y
-
-                python3 -m venv venv
-                . venv/bin/activate
-
-                pip install flask requests
+                docker build -t $ACR_NAME.azurecr.io/$IMAGE_NAME:$TAG .
                 '''
             }
         }
 
-        stage('Run Application') {
+        stage('Push Image to ACR') {
             steps {
                 sh '''
-                . venv/bin/activate
-                python app.py
+                docker push $ACR_NAME.azurecr.io/$IMAGE_NAME:$TAG
                 '''
             }
         }
