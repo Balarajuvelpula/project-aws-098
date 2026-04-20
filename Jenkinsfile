@@ -2,38 +2,30 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION = "ap-south-1"
-        ECR_REGISTRY = "546288497088.dkr.ecr.ap-south-1.amazonaws.com"
-        ECR_REPO = "python-ecr"
-        IMAGE_TAG = "${BUILD_NUMBER}"
+        AWS_REGION = 'ap-south-1'
+        ECR_REPO = '109990058030.dkr.ecr.ap-south-1.amazonaws.com/balu_934729'
+        IMAGE_TAG = 'python_image'
     }
 
     stages {
 
-        stage('Clone Repository') {
+        stage('git Clone') {
             steps {
-                git branch: 'main', 
-                url: 'https://github.com/Balarajuvelpula/project-aws-098.git'
-            }
-        }
-
-        stage('Login to ECR') {
-            steps {
-                withCredentials([[$class: 'AmazonWebServicesCredentialsBinding',
-                credentialsId: 'aws-creds']]) {
-
-                    sh '''
-                    aws ecr get-login-password --region $AWS_REGION | \
-                    docker login --username AWS --password-stdin $ECR_REGISTRY
-                    '''
-                }
+                git 'https://github.com/Balarajuvelpula/project-aws-098.git'
             }
         }
 
         stage('Build Docker Image') {
             steps {
+                sh 'docker build -t $109990058030.dkr.ecr.ap-south-1.amazonaws.com/balu_934729:$python_image .'
+            }
+        }
+
+        stage('Login to AWS ECR') {
+            steps {
                 sh '''
-                docker build -t $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG .
+                aws ecr get-login-password --region $ap-south-1\
+                | docker login --username AWS --password-stdin 109990058030.dkr.ecr.$ap-south-1.amazonaws.com
                 '''
             }
         }
@@ -41,9 +33,28 @@ pipeline {
         stage('Push Image to ECR') {
             steps {
                 sh '''
-                docker push $ECR_REGISTRY/$ECR_REPO:$IMAGE_TAG
+                docker tag $109990058030.dkr.ecr.ap-south-1.amazonaws.com/balu_934729:$python_image 109990058030.dkr.ecr.$ap-south-1.amazonaws.com/$109990058030.dkr.ecr.ap-south-1.amazonaws.com/balu_934729:$python_image
+                docker push 109990058030.dkr.ecr.$ap-south-1.amazonaws.com/$109990058030.dkr.ecr.ap-south-1.amazonaws.com/balu_934729:$python_image
+                '''
+            }
+        }
+
+        stage('Deploy') {
+            steps {
+                sh '''
+                docker stop myapp || true
+                docker rm myapp || true
+                docker run -d -p 80:80 --name myapp 109990058030.dkr.ecr.$ap-south-1.amazonaws.com/$109990058030.dkr.ecr.ap-south-1.amazonaws.com/balu_934729:$python_image
                 '''
             }
         }
     }
 }
+
+
+
+
+
+
+
+
