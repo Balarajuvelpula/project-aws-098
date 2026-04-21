@@ -3,7 +3,6 @@ pipeline {
 
     environment {
         ACCOUNT_ID = "109990058030"
-        AWS_REGION = "ap-south-1"
         IMAGE_TAG = "python_image"
         REPO_NAME = "balu_934729"
         ECR_URL = "109990058030.dkr.ecr.ap-south-1.amazonaws.com"
