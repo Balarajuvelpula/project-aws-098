@@ -5,6 +5,7 @@ pipeline {
         ACCOUNT_ID = "109990058030"
         IMAGE_TAG = "python_image"
         REPO_NAME = "balu_934729"
+        AWS_REGION = "ap-south-1"
         ECR_URL = "109990058030.dkr.ecr.ap-south-1.amazonaws.com"
     }
 
@@ -20,7 +21,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 sh """
-                docker build -t ${REPO_NAME}:${IMAGE_TAG} .
+                docker build -t ${balu_934729}:${python_image} .
                 """
             }
         }
@@ -28,8 +29,8 @@ pipeline {
         stage('Login to AWS ECR') {
             steps {
                 sh """
-                aws ecr get-login-password --region ${AWS_REGION} \
-                | docker login --username AWS --password-stdin ${ECR_URL}
+                aws ecr get-login-password --region ${ap-south-1} \
+                | docker login --username AWS --password-stdin ${109990058030.dkr.ecr.ap-south-1.amazonaws.com}
                 """
             }
         }
@@ -37,7 +38,7 @@ pipeline {
         stage('Tag Docker Image') {
             steps {
                 sh """
-                docker tag ${REPO_NAME}:${IMAGE_TAG} ${ECR_URL}/${REPO_NAME}:${IMAGE_TAG}
+                docker tag ${balu_934729}:${python_image} ${109990058030.dkr.ecr.ap-south-1.amazonaws.com}/${balu_934729}:${python_image}
                 """
             }
         }
@@ -45,7 +46,7 @@ pipeline {
         stage('Push Image to ECR') {
             steps {
                 sh """
-                docker push ${ECR_URL}/${REPO_NAME}:${IMAGE_TAG}
+                docker push ${109990058030.dkr.ecr.ap-south-1.amazonaws.com}/${balu_934729}:${python_image}
                 """
             }
         }
@@ -55,7 +56,7 @@ pipeline {
                 sh """
                 docker stop myapp || true
                 docker rm myapp || true
-                docker run -d -p 80:80 --name myapp ${ECR_URL}/${REPO_NAME}:${IMAGE_TAG}
+                docker run -d -p 80:80 --name myapp ${109990058030.dkr.ecr.ap-south-1.amazonaws.com}/${balu_934729}:${python_image}
                 """
             }
         }
